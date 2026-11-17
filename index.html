@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediCare AI - Medical Assistant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body {
+  font-family:Inter,sans-serif;
+  background:#f3f7fb;
+  color:#1e293b;
+}
+
+.app {
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width:260px;
+  background:#102c45;
+  color:white;
+  padding:25px 18px;
+  display:flex;
+  flex-direction:column;
+}
+
+.logo {
+  font-size:23px;
+  font-weight:800;
+  margin-bottom:35px;
+}
+
+.logo span {
+  color:#43d9b0;
+}
+
+.newchat {
+  background:#1c4965;
+  color:white;
+  border:1px solid #47718a;
+  padding:13px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:14px;
+  margin-bottom:25px;
+}
+
+.sidebar h4 {
+  color:#9db6c9;
+  font-size:12px;
+  margin-bottom:15px;
+}
+
+.menu-item {
+  padding:13px;
+  border-radius:9px;
+  margin-bottom:7px;
+  cursor:pointer;
+  color:#d6e5ef;
+  font-size:14px;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background:#24536e;
+}
+
+.sidebar-bottom {
+  margin-top:auto;
+  font-size:12px;
+  color:#b3c8d8;
+  line-height:1.7;
+}
+
+/* MAIN */
+.main {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.topbar {
+  background:white;
+  padding:20px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #e5edf3;
+}
+
+.topbar h3 {
+  font-size:17px;
+}
+
+.status {
+  color:#159c76;
+  background:#e3f8f0;
+  padding:8px 13px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+/* CHAT */
+.chat-area {
+  width:100%;
+  max-width:900px;
+  margin:auto;
+  padding:30px 25px;
+  flex:1;
+}
+
+.welcome {
+  text-align:center;
+  margin:40px 0 35px;
+}
+
+.welcome-icon {
+  font-size:45px;
+  margin-bottom:15px;
+}
+
+.welcome h1 {
+  font-size:32px;
+  color:#173b56;
+  margin-bottom:10px;
+}
+
+.welcome p {
+  color:#718096;
+  font-size:14px;
+}
+
+.suggestions {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
+  margin-bottom:25px;
+}
+
+.suggestion {
+  background:white;
+  border:1px solid #e1eaf1;
+  padding:18px;
+  border-radius:13px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.suggestion:hover {
+  border-color:#26b99a;
+  transform:translateY(-2px);
+}
+
+.suggestion strong {
+  display:block;
+  margin-bottom:7px;
+  font-size:14px;
+}
+
+.suggestion p {
+  font-size:12px;
+  color:#718096;
+}
+
+/* MESSAGES */
+.messages {
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  padding-bottom:20px;
+}
+
+.message {
+  max-width:85%;
+  padding:15px 17px;
+  border-radius:14px;
+  font-size:14px;
+  line-height:1.7;
+  white-space:pre-wrap;
+}
+
+.user {
+  align-self:flex-end;
+  background:#dff7ef;
+  color:#145b48;
+}
+
+.bot {
+  align-self:flex-start;
+  background:white;
+  border:1px solid #e4edf3;
+  color:#334155;
+}
+
+/* INPUT */
+.input-section {
+  background:white;
+  border-top:1px solid #e5edf3;
+  padding:20px 25px;
+}
+
+.input-box {
+  max-width:850px;
+  margin:auto;
+  display:flex;
+  gap:10px;
+  background:#f6f9fc;
+  border:1px solid #dce7ef;
+  border-radius:14px;
+  padding:8px;
+}
+
+.input-box input {
+  flex:1;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  padding:10px;
+  font-size:14px;
+}
+
+.send {
+  background:#12a887;
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:12px 20px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.send:hover {
+  background:#09866b;
+}
+
+.disclaimer {
+  text-align:center;
+  font-size:11px;
+  color:#8998a8;
+  margin-top:12px;
+}
+
+@media(max-width:700px) {
+  .sidebar {display:none}
+  .topbar {padding:16px}
+  .chat-area {padding:15px}
+  .welcome h1 {font-size:25px}
+  .suggestions {grid-template-columns:1fr}
+  .message {max-width:95%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="logo">✚ MediCare<span> AI</span></div>
+
+<button class="newchat" onclick="newChat()">＋ New Chat</button>
+
+<h4>MENU</h4>
+
+<div class="menu-item active">💬 Medical Chat</div>
+<div class="menu-item">❤️ Health Assistant</div>
+<div class="menu-item">💊 Medicine Information</div>
+<div class="menu-item">📋 Health Reports</div>
+<div class="menu-item">⚙️ Settings</div>
+
+<div class="sidebar-bottom">
+  <p>🟢 AI Assistant Interface</p>
+  <p>For educational health information only.</p>
+</div>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<header class="topbar">
+<h3>Medical Assistant</h3>
+<div class="status">● Assistant UI Ready</div>
+</header>
+
+<section class="chat-area">
+
+<div class="welcome" id="welcome">
+<div class="welcome-icon">🩺</div>
+<h1>Welcome to MediCare AI</h1>
+<p>Your smart health information assistant.</p>
+</div>
+
+<div class="suggestions" id="suggestions">
+
+<div class="suggestion" onclick="ask('What are common symptoms of fever?')">
+<strong>🌡️ Fever Information</strong>
+<p>Learn about common fever symptoms.</p>
+</div>
+
+<div class="suggestion" onclick="ask('How can I maintain a healthy lifestyle?')">
+<strong>❤️ Healthy Lifestyle</strong>
+<p>Get general health and wellness tips.</p>
+</div>
+
+<div class="suggestion" onclick="ask('Explain blood test reports in simple language.')">
+<strong>🧪 Blood Reports</strong>
+<p>Understand common blood test terms.</p>
+</div>
+
+<div class="suggestion" onclick="ask('What should I know about medicines?')">
+<strong>💊 Medicine Guide</strong>
+<p>Learn general medicine safety information.</p>
+</div>
+
+</div>
+
+<div class="messages" id="messages"></div>
+
+</section>
+
+<!-- INPUT -->
+<footer class="input-section">
+
+<div class="input-box">
+<input
+id="userInput"
+type="text"
+placeholder="Ask your health-related question..."
+onkeydown="if(event.key==='Enter') sendMessage()"
+>
+<button class="send" onclick="sendMessage()">Send ➤</button>
+</div>
+
+<p class="disclaimer">
+⚕️ This chatbot provides general educational information, not medical diagnosis or treatment.
+</p>
+
+</footer>
+
+</main>
+</div>
+
+<script>
+
+// New Chat
+function newChat() {
+  document.getElementById("messages").innerHTML = "";
+  document.getElementById("welcome").style.display = "block";
+  document.getElementById("suggestions").style.display = "grid";
+}
+
+// Suggestion
+function ask(text) {
+  document.getElementById("userInput").value = text;
+  sendMessage();
+}
+
+// Add message
+function addMessage(text,type) {
+  const box = document.createElement("div");
+  box.className = "message " + type;
+  box.textContent = text;
+  document.getElementById("messages").appendChild(box);
+}
+
+// Send message
+function sendMessage() {
+
+  const input = document.getElementById("userInput");
+  const message = input.value.trim();
+
+  if(!message) return;
+
+  document.getElementById("welcome").style.display = "none";
+  document.getElementById("suggestions").style.display = "none";
+
+  addMessage(message,"user");
+
+  input.value = "";
+
+  setTimeout(() => {
+    addMessage(
+      "Thank you for your question. I am the MediCare AI demo assistant.\n\nI can provide general educational information about health topics. This demo is not connected to a medical AI server, so I cannot provide personalized medical advice or diagnose conditions.\n\nFor personal symptoms, please speak with a qualified healthcare professional.",
+      "bot"
+    );
+  },500);
+
+}
+
+</script>
+
+</body>
+</html>
